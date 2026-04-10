@@ -51,14 +51,26 @@ FLASK_SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
 
-# Allow the deployed frontend origin; adjust FRONTEND_ORIGIN in .env as needed
+# ── Session cookie must be SameSite=None + Secure when frontend & backend
+#    are on different subdomains (e.g. two separate .onrender.com services).
+#    Without this the browser silently drops the cookie and every protected
+#    route returns 401 immediately after login.
+app.config.update(
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True,       # required when SameSite=None
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_NAME="pw_session",
+)
+
+# ── CORS: allow the deployed frontend + local dev origins.
+#    Set FRONTEND_ORIGIN in Render's Environment dashboard (no quotes, no spaces).
+#    Example value: https://pennywise-api-q2rb.onrender.com
 FRONTEND_ORIGIN = os.environ.get(
     "FRONTEND_ORIGIN",
-    "https://pennywise-api-q2rb.onrender.com,http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5000",
+    "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5000",
 )
-origins = [o.strip() for o in FRONTEND_ORIGIN.split(",")]
+origins = [o.strip() for o in FRONTEND_ORIGIN.split(",") if o.strip()]
 
-# This line tells the server to trust your specific Render URL
 CORS(app, supports_credentials=True, origins=origins)
 
 # ---------------------------------------------------------------------------
