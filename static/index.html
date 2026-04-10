@@ -1087,13 +1087,13 @@
       <!-- Step 2: OTP verification (shown after signup) -->
       <div id="otpStep">
         <div class="otp-hint">
-          A 6-digit code was sent to <strong id="otpEmailHint"></strong>.<br/>
+          A 8-digit code was sent to <strong id="otpEmailHint"></strong>.<br/>
           Check your inbox — it expires in a few minutes.
         </div>
         <div class="auth-fields">
           <div class="field">
             <label for="otpInput">One-Time Code</label>
-            <input id="otpInput" type="text" placeholder="— — — — — —" maxlength="6"
+            <input id="otpInput" type="text" placeholder="— — — — — — — —" maxlength="8"
               autocomplete="one-time-code" style="letter-spacing:0.3em;font-size:20px;text-align:center" />
           </div>
         </div>
@@ -1969,7 +1969,7 @@
       const errEl = document.getElementById('otpErr');
       errEl.textContent = '';
 
-      if (token.length !== 6) { errEl.textContent = 'Please enter the 6-digit code.'; return; }
+      if (token.length !== 8) { errEl.textContent = 'Please enter the 8-digit code.'; return; }
 
       btn.disabled    = true;
       btn.textContent = '…';
