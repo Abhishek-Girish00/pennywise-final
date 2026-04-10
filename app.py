@@ -54,11 +54,11 @@ app.secret_key = FLASK_SECRET_KEY
 # Allow the deployed frontend origin; adjust FRONTEND_ORIGIN in .env as needed
 FRONTEND_ORIGIN = os.environ.get(
     "FRONTEND_ORIGIN",
-    "http://127.0.0.1:5500,http://localhost:5500"
+    "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5000",
 )
 origins = [o.strip() for o in FRONTEND_ORIGIN.split(",")]
 
-# This line is the key—it tells Flask to trust the origins in your list
+# This line tells the server to trust your specific Render URL
 CORS(app, supports_credentials=True, origins=origins)
 
 # ---------------------------------------------------------------------------
